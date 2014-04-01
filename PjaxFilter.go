@@ -9,12 +9,12 @@ import (
 	"code.google.com/p/go-html-transform/h5"
 )
 
-type PjaxResultRewriter struct {
+type PjaxFilter struct {
 	handler http.HandlerFunc
 }
 
-func NewPjaxResultRewriter(handler http.HandlerFunc) *PjaxResultRewriter {
-	return &PjaxResultRewriter{
+func NewPjaxFilter(handler http.HandlerFunc) *PjaxFilter {
+	return &PjaxFilter{
 		handler: handler,
 	}
 }
@@ -50,7 +50,7 @@ func rewriteBody(containerSelector string, dest io.Writer, body string) (err err
 	return
 }
 
-func (s *PjaxResultRewriter) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
+func (s *PjaxFilter) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	var container string
 
 	// Validate pjax meta data.

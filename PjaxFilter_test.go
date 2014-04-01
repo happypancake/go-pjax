@@ -12,7 +12,7 @@ func TestHandlerProxies(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	request, _ := http.NewRequest("GET", "http://foobar", nil)
 
-	server := NewPjaxResultRewriter(func(rw http.ResponseWriter, req *http.Request) {
+	server := NewPjaxFilter(func(rw http.ResponseWriter, req *http.Request) {
 		rw.Header().Set("Content-Type", "text/plain")
 		rw.Write([]byte("hello world"))
 	})
@@ -32,7 +32,7 @@ func TestHandlerSelectContainerOnPjaxRequest(t *testing.T) {
 	request.Header.Add("X-PJAX", "true")
 	request.Header.Add("X-PJAX-CONTAINER", "#main")
 
-	server := NewPjaxResultRewriter(func(rw http.ResponseWriter, req *http.Request) {
+	server := NewPjaxFilter(func(rw http.ResponseWriter, req *http.Request) {
 		rw.Write([]byte("<html><head><title>foobar</title></head><body><div id=\"main\">hello world</div></body></html>"))
 	})
 
