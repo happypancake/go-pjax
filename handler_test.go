@@ -1,7 +1,6 @@
 package pjax
 
 import (
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -24,8 +23,7 @@ func TestHandlerProxies(t *testing.T) {
 		t.Fatalf("wrong content type: ", contentType)
 	}
 
-	body, _ := ioutil.ReadAll(recorder.Body)
-	assert.Equal(t, "<div id=\"main\">hello world</div>", recorder.Body.String())
+	assert.Equal(t, "hello world", recorder.Body.String())
 }
 
 func TestHandlerSelectContainerOnPjaxRequest(t *testing.T) {
