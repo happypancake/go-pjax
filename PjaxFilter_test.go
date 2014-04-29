@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"strings"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -39,4 +40,19 @@ func TestHandlerSelectContainerOnPjaxRequest(t *testing.T) {
 	server.ServeHTTP(recorder, request)
 
 	assert.Equal(t, "hello world", recorder.Body.String())
+}
+
+func TestHandlerSelectTitleOnPjaxRequest(t *testing.T) {
+	recorder := httptest.NewRecorder()
+	request, _ := http.NewRequest("GET", "http://foobar", nil)
+	request.Header.Add("X-PJAX", "true")
+	request.Header.Add("X-PJAX-CONTAINER", "#main")
+
+	server := NewPjaxFilter(func(rw http.ResponseWriter, req *http.Request) {
+		rw.Write([]byte("<html><head><title>foobar</title></head><body><div id=\"main\">hello world</div></body></html>"))
+	})
+
+	server.ServeHTTP(recorder, request)
+
+	assert.True(t, strings.HasPrefix(recorder.Body.String(), "<title>foobar</title"))
 }
