@@ -33,6 +33,11 @@ func rewriteBody(containerSelector string, dest io.Writer, body string) (err err
 		return
 	}
 
+	var titleNode string
+	if titleNode, err = getTitleNode(document); err != nil {
+		return
+	}
+
 	if chain, err = selector.Selector(containerSelector); err != nil {
 		err = fmt.Errorf("invalid css: %v", containerSelector)
 		return
@@ -42,11 +47,27 @@ func rewriteBody(containerSelector string, dest io.Writer, body string) (err err
 		match := matches[0:1] // Take only the first match
 		newBody := h5.RenderNodesToString(match)
 
+		dest.Write([]byte(titleNode))
 		dest.Write([]byte(newBody))
 		return
 	}
 
 	err = fmt.Errorf("container not found")
+	return
+}
+
+func getTitleNode(document *h5.Tree) (titleNode string, err error) {
+	var chain *selector.Chain
+
+	if chain, err = selector.Selector("title"); err != nil {
+		return 
+	}
+
+	if matches := chain.Find(document.Top()); len(matches) > 0 {
+		match := matches[0:1]
+		titleNode = h5.RenderNodesToString(match)
+	}
+
 	return
 }
 
