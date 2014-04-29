@@ -38,5 +38,5 @@ func TestHandlerSelectContainerOnPjaxRequest(t *testing.T) {
 
 	server.ServeHTTP(recorder, request)
 
-	assert.Equal(t, "<div id=\"main\">hello world</div>", recorder.Body.String())
+	assert.Equal(t, "hello world", recorder.Body.String())
 }
