@@ -3,8 +3,8 @@ package pjax
 import (
 	"net/http"
 	"net/http/httptest"
-	"testing"
 	"strings"
+	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -34,7 +34,7 @@ func TestHandlerSelectContainerOnPjaxRequest(t *testing.T) {
 	request.Header.Add("X-PJAX-CONTAINER", "#main")
 
 	server := NewPjaxFilter(func(rw http.ResponseWriter, req *http.Request) {
-		rw.Write([]byte("<html><head><title>foobar</title></head><body><div id=\"main\">hello world</div></body></html>"))
+		rw.Write([]byte("<html><head><body><div id=\"main\">hello world</div></body></html>"))
 	})
 
 	server.ServeHTTP(recorder, request)
