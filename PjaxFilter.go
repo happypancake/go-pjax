@@ -7,7 +7,6 @@ import (
 
 	"code.google.com/p/go-html-transform/css/selector"
 	"code.google.com/p/go-html-transform/h5"
-	"code.google.com/p/go.net/html"
 )
 
 type PjaxFilter struct {
@@ -46,7 +45,7 @@ func rewriteBody(containerSelector string, dest io.Writer, body string) (err err
 
 	if matches := chain.Find(document.Top()); len(matches) > 0 {
 		match := matches[0:1] // Take only the first match
-		newBody := h5.RenderNodesToString([]*html.Node{match[0].FirstChild})
+		newBody := h5.RenderNodesToString(h5.Children(match[0]))
 
 		fmt.Printf("data: %v", h5.Data(match[0]))
 
