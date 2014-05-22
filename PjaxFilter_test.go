@@ -56,3 +56,18 @@ func TestHandlerSelectTitleOnPjaxRequest(t *testing.T) {
 
 	assert.True(t, strings.HasPrefix(recorder.Body.String(), "<title>foobar</title"))
 }
+
+func TestHandlerSelectsBodyWithMultipleChildrenOnPjaxRequest(t *testing.T) {
+	recorder := httptest.NewRecorder()
+	request, _ := http.NewRequest("GET", "http://foobar", nil)
+	request.Header.Add("X-PJAX", "true")
+	request.Header.Add("X-PJAX-CONTAINER", "#main")
+
+	server := NewPjaxFilter(func(rw http.ResponseWriter, req *http.Request) {
+		rw.Write([]byte("<html><head><title>foobar</title></head><body><div id=\"main\"><h1>title</h1><p>hello world</p></div></body></html>"))
+	})
+
+	server.ServeHTTP(recorder, request)
+
+	assert.Equal(t, recorder.Body.String(), "<title>foobar</title><h1>title</h1><p>hello world</p>")
+}
